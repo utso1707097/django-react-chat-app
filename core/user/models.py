@@ -1,4 +1,3 @@
-import uuid
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,13 +7,13 @@ from core.abstract.models import AbstractModel,AbstractManager
 
 
 class UserManager(BaseUserManager,AbstractManager):
-    def get_object_by_public_id(self, public_id):
+    # def get_object_by_public_id(self, public_id):
 
-        try:
-            instance = self.get(public_id=public_id)
-            return instance
-        except (ObjectDoesNotExist, ValueError, TypeError):
-            return Http404
+    #     try:
+    #         instance = self.get(public_id=public_id)
+    #         return instance
+    #     except (ObjectDoesNotExist, ValueError, TypeError):
+    #         return Http404
 
     def create_user(self, username, email, password=None, **kwargs):
         """Create and return a `User` with an email, phone number, username and password."""
@@ -23,7 +22,7 @@ class UserManager(BaseUserManager,AbstractManager):
         if email is None:
             raise TypeError('Users must have an email.')
         if password is None:
-            raise TypeError('User must have an email.')
+            raise TypeError('User must have a password.')
 
         user = self.model(username=username, email=self.normalize_email(email), **kwargs)
         user.set_password(password)
@@ -71,8 +70,8 @@ class User( AbstractModel,AbstractBaseUser, PermissionsMixin):
     #created = models.DateTimeField(auto_now=True)
     #updated = models.DateTimeField(auto_now_add=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = 'username'
+    EMAIL_FIELD = 'email'
 
     objects = UserManager()
 
